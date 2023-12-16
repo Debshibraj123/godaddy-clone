@@ -7,10 +7,32 @@ const tokens = (n) => {
 };
 
 describe("ETHDaddy", () => {
-  it("has a name", async () => {
+
+  let ethdaddy;
+  let deployer, owner1;
+
+  beforeEach(async ()=> {
+    [ deployer, owner1] = await ethers.getSigners();
+
     const ETHDaddy = await ethers.getContractFactory("ETHDaddy");
-    let ethdaddy = await ETHDaddy.deploy();
-    const result = await ethdaddy.name();
-    expect(result).to.equal("Eth daddy");
+    ethdaddy = await ETHDaddy.deploy('ETHDaddy', 'ETHD');
   });
+
+  describe("Deployment", () => {
+    it("has a name", async () => {
+      let result = await ethdaddy.name();
+      expect(result).to.equal('ETHDaddy');    
+    });
+  
+    it("has a symbol", async () => {
+      let result = await ethdaddy.symbol();
+      expect(result).to.equal('ETHD');
+    });
+
+    it("has a owner", async () => {
+      let result = await ethdaddy.owner();
+      expect(result).to.equal(deployer.address);
+    });
+  })
+  
 });
