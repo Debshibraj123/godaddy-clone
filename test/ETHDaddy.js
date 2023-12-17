@@ -12,10 +12,15 @@ describe("ETHDaddy", () => {
   let deployer, owner1;
 
   beforeEach(async ()=> {
-    [ deployer, owner1] = await ethers.getSigners();
+    [ deployer, owner1 ] = await ethers.getSigners();
 
     const ETHDaddy = await ethers.getContractFactory("ETHDaddy");
     ethdaddy = await ETHDaddy.deploy('ETHDaddy', 'ETHD');
+
+    //list a domain
+    const transaction = await ethdaddy.connect(deployer).list("jack.eth", tokens(10))
+    await transaction.wait();
+
   });
 
   describe("Deployment", () => {
@@ -35,4 +40,11 @@ describe("ETHDaddy", () => {
     });
   })
   
+  describe("Domain", ()=>
+  {
+    it("has a Domain", async () => {
+      let domain = await  ethdaddy.domains(1);
+      expect(domain.name).to.be.equal("jack.eth")
+    })
+  })
 });
